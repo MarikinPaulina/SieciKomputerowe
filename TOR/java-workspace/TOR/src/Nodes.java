@@ -62,19 +62,22 @@ public class Nodes {
 	            InetAddress address = (InetAddress) obj2.get("address");
 	            int port = (int) obj2.get("port");
 	            if(address != null) {
-//	            	KONIEC MODYFIKACJI
-	            	InetAddress nextAddress = addressesList.remove(0);
-	            	obj2.put("address", nextAddress);
-	                obj2.put("addresses", addressesList);
-	                array.set(1, obj2);
-	                Object json = (Object)array;
+//	            	InetAddress nextAddress = addressesList.remove(0);
+//	            	obj2.put("address", nextAddress);
+//	                obj2.put("addresses", addressesList);
+//	                array.set(1, obj2);
+//	                Object json = (Object)array;
+					Object json = (Object)obj2.get("message");
 	                byteResponse = json.toString().getBytes("utf8");
 	                DatagramPacket response = new DatagramPacket(byteResponse, byteResponse.length, address, port);
 	                datagramSocket.send(response);
 	            }else {
-	            	System.out.print(obj2.get("message"));
+					System.out.print("Wiadomość od: " + receivedPacket.getAddress() +
+							" port: " + receivedPacket.getPort() +
+							" o treści: " + obj2.get("message"));
+//	            	System.out.print(obj2.get("message"));
 	            	obj2.put("message", "odebrano");
-	            	array.set(0, 0);
+	            	array.set(0, false);
 	            	array.set(1, obj2);
 	            	Object json = (Object)array;
 	            	address = inetAddress.remove(inetAddress.size()-1);
