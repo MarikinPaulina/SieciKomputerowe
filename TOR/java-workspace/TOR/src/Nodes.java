@@ -17,7 +17,7 @@ public class Nodes {
 	static int BUFFER_SIZE = 256;
 	
 	public static void main(String[] args) throws Exception{
-		JSONParser parser = new JSONParser();
+//		JSONParser parser = new JSONParser();
 		ArrayList<InetAddress> inetAddress = new ArrayList<InetAddress>();
 		ArrayList<Integer> ports = new ArrayList<Integer>();
 
@@ -32,10 +32,8 @@ public class Nodes {
 		}
 
 		int Port;
-		InetAddress Adress;
 		if(args.length >0){
 			Port = Integer.parseInt(nodes.get(Integer.parseInt(args[0])).get(1));
-			Adress = InetAddress.getByName(nodes.get(Integer.parseInt(args[0])).get(0));
 		}
 		else{
 			Scanner sc = new Scanner(System.in);
@@ -47,7 +45,6 @@ public class Nodes {
 			int n = Integer.parseInt(sc.nextLine());
 
 			Port = Integer.parseInt(nodes.get(n).get(1));
-			Adress = InetAddress.getByName(nodes.get(n).get(0));
 			System.out.println(nodes.get(n));
 		}
 
@@ -62,8 +59,7 @@ public class Nodes {
             int length = receivedPacket.getLength(); 
             
             String messageReceived = new String(receivedPacket.getData(), 0, length, "utf8");
-            inetAddress.add( receivedPacket.getAddress() );
-            ports.add( receivedPacket.getPort() );
+
 
 
 //            Object obj = parser.parse(messageReceived);
@@ -74,6 +70,8 @@ public class Nodes {
 
             
             if( (boolean) obj2.get("forward") ) {
+				inetAddress.add( receivedPacket.getAddress() );
+				ports.add( receivedPacket.getPort() );
 //	            ArrayList<InetAddress> addressesList;
 //	            addressesList = (ArrayList<InetAddress>)obj2.get("addresses");
 //	            InetAddress address = (InetAddress)obj2.get("address");
@@ -95,7 +93,7 @@ public class Nodes {
 	                datagramSocket.send(response);
 	                System.out.println("Przekierowałem wiadomość");
 	            }else {
-					System.out.print("Wiadomość od: " + receivedPacket.getAddress().toString() +
+					System.out.println("Wiadomość od: " + receivedPacket.getAddress().toString() +
 							" port: " + receivedPacket.getPort() +
 							" o treści: " + obj2.get("message"));
 //	            	System.out.print(obj2.get("message"));
@@ -107,14 +105,17 @@ public class Nodes {
 	                byteResponse = obj2.toString().getBytes("utf8");
 	                DatagramPacket response = new DatagramPacket(byteResponse, byteResponse.length, address, port);
 	                datagramSocket.send(response);
+	                System.out.println("Wysyłam odpowiedź");
 	            }
             }else {
 //            	Object json = (Object)array;
+				System.out.println("Otrzymano odpowiedź");
             	InetAddress address = inetAddress.remove(inetAddress.size()-1);
  	            int port = ports.remove(ports.size()-1);
 //                byteResponse = json.toString().getBytes("utf8");
                 DatagramPacket response = new DatagramPacket(receivedPacket.getData(), length, address, port);
                 datagramSocket.send(response);
+				System.out.println("Przekierowano odpowiedź");
             }
             
             Thread.sleep(1000); 

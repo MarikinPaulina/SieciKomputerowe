@@ -7,9 +7,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
+import org.json.JSONObject;
 
 
 public class client {
@@ -57,7 +56,7 @@ public class client {
             JSONObject obj = new JSONObject();
             obj.put("forward",true);
             obj.put("inetAddress", "");
-            obj.put("port",null);
+            obj.put("port",0);
             obj.put("message", message);
             for(int i = track.size()-1; i>=0; i--)
             {
@@ -83,11 +82,8 @@ public class client {
             int length = receivedPacket.getLength();
 
             String messageReceived = new String(receivedPacket.getData(), 0, length, "utf8");
-            JSONParser parser = new JSONParser();
-            Object answer = parser.parse(messageReceived);
-            JSONArray array = (JSONArray)answer;
-            org.json.JSONObject obj2 = (org.json.JSONObject)array.get(1);
-            System.out.print("Wiadomość od: " + receivedPacket.getAddress() +
+            JSONObject obj2 = new JSONObject(messageReceived);
+            System.out.println("Wiadomość od: " + receivedPacket.getAddress().toString() +
                     " port: " + receivedPacket.getPort() +
                     " o treści: " + obj2.get("message"));
     }}
