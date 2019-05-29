@@ -55,15 +55,15 @@ public class client {
 
     //      Paczka z paczką z paczką...
             JSONObject obj = new JSONObject();
-            obj.put("direction",true);
-            obj.put("inetAddress", null);
+            obj.put("forward",true);
+            obj.put("inetAddress", "");
             obj.put("port",null);
             obj.put("message", message);
             for(int i = track.size()-1; i>=0; i--)
             {
                 JSONObject obj2 = new JSONObject();
-                obj.put("direction",true);
-                obj2.put("address",InetAddress.getByName((track.get(i)).get(0)));
+                obj2.put("forward",true);
+                obj2.put("inetAddress",track.get(i).get(0));
                 obj2.put("port",Integer.parseInt((track.get(i)).get(1)));
                 obj2.put("message",obj);
                 obj = obj2;
@@ -76,7 +76,7 @@ public class client {
             sentPacket.setAddress(InetAddress.getByName(next.get(0)));
             sentPacket.setPort(Integer.parseInt(next.get(1)));
             socket.send(sentPacket);
-    //                System.out.println("Wiadomość wysłana");
+            System.out.println("Wiadomość wysłana do " +next.get(0) +next.get(1));
 
             DatagramPacket receivedPacket = new DatagramPacket( new byte[BUFFER_SIZE], BUFFER_SIZE);
             socket.receive(receivedPacket);
