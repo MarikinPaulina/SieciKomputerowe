@@ -1,20 +1,14 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 import org.json.JSONObject;
 
 
 public class client {
 
-    static int N = 2;
-    static int BUFFER_SIZE = 256;
+    private static int N = 2;
 
     public static void main(String[] args) throws Exception
     {
@@ -69,7 +63,7 @@ public class client {
             }
             byte[] send_data = obj.toString().getBytes();
 
-            DatagramSocket socket = null;
+            DatagramSocket socket;
             socket = new DatagramSocket();
             DatagramPacket sentPacket = new DatagramPacket(send_data, send_data.length);
             sentPacket.setAddress(InetAddress.getByName(next.get(0)));
@@ -77,15 +71,16 @@ public class client {
             socket.send(sentPacket);
             System.out.println("Wiadomość wysłana do " +next.get(0) +next.get(1));
 
+            int BUFFER_SIZE = 256;
             DatagramPacket receivedPacket = new DatagramPacket( new byte[BUFFER_SIZE], BUFFER_SIZE);
             socket.receive(receivedPacket);
             int length = receivedPacket.getLength();
 
             String messageReceived = new String(receivedPacket.getData(), 0, length, "utf8");
             JSONObject obj2 = new JSONObject(messageReceived);
-            System.out.println("Wiadomość od: " + receivedPacket.getAddress().toString() +
-                    " port: " + receivedPacket.getPort() +
-                    " o treści: " + obj2.get("message"));
+            System.out.println("Wiadomość od:" + receivedPacket.getAddress().toString() +
+                    " port:" + receivedPacket.getPort() +
+                    " o treści:" + obj2.get("message"));
     }}
 
 }
